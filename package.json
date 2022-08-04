@@ -1,0 +1,37 @@
+{
+    "name": "fine-service",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon ./src/index.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@day-drive/gerc-payment-sdk": "^1.0.18",
+        "@day-drive/user-sdk": "^1.0.8",
+        "@fidm/x509": "^1.2.1",
+        "aws-sdk": "^2.1024.0",
+        "axios": "^0.23.0",
+        "dotenv": "^10.0.0",
+        "ec-key": "^0.0.4",
+        "fastify": "^3.22.0",
+        "fastify-swagger": "^4.12.4",
+        "mongoose": "^6.0.13",
+        "node-forge": "^0.10.0",
+        "typescript-eslint": "0.0.1-alpha.0"
+    },
+    "devDependencies": {
+        "@types/node": "^16.11.1",
+        "@typescript-eslint/eslint-plugin": "^5.0.0",
+        "@typescript-eslint/parser": "^5.0.0",
+        "eslint": "^8.0.1",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "nodemon": "^2.0.13",
+        "typescript": "^4.4.4"
+    }
+}

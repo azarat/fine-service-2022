@@ -1,0 +1,24 @@
+FROM 047590332772.dkr.ecr.eu-central-1.amazonaws.com/nodejs:16
+
+WORKDIR /usr/src/app
+
+ENV PORT=8080
+ARG GITHUB_TOKEN
+ENV GITHUB_TOKEN=$GITHUB_TOKEN
+ARG API_HOST
+ENV API_HOST=$API_HOST
+ARG AWS_REGION
+ENV AWS_REGION=$AWS_REGION
+ARG SECRET_ID
+ENV SECRET_ID=$SECRET_ID
+
+COPY package*.json ./
+COPY .npmrc ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 8080
+
+CMD [ "npm", "start" ]

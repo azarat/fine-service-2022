@@ -2,7 +2,7 @@ FROM 047590332772.dkr.ecr.eu-central-1.amazonaws.com/nodejs:16
 
 WORKDIR /usr/src/app
 
-ENV PORT=8080
+ENV PORT=8081
 ARG GITHUB_TOKEN
 ENV GITHUB_TOKEN=$GITHUB_TOKEN
 ARG API_HOST
@@ -19,6 +19,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD [ "npm", "start" ]

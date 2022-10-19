@@ -55,32 +55,42 @@ class Gerz {
       DRIVER_LICENSE: 'SearchFinesForLicense',
       INN: 'SearchFinesByTaxpayerRregNumber',
       TECHNICAL_PASSPORT: 'SearchFinesByCarRegCert',
+      DOCUMENT: 'SearchFinesForDocument',
     }[type]
 
-    const transformedBody = {
-      DRIVER_LICENSE: this.transformDriverLicense,
-      INN: this.transformInn,
-      TECHNICAL_PASSPORT: this.transformTechnicalPassport,
+    // const transformedBody = {
+    //   DRIVER_LICENSE: this.transformDriverLicense,
+    //   INN: this.transformInn,
+    //   TECHNICAL_PASSPORT: this.transformTechnicalPassport,
+    // }[type](body)
+
+    console.log(type, body);
+
+    const fines = {
+      DRIVER_LICENSE: this.getFinesByDriverLicense,
+      INN: this.getFinesByInn,
+      TECHNICAL_PASSPORT: this.getFinesByTechnicalPassport,
+      DOCUMENT: this.getFinesByDriverDocument,
     }[type](body)
 
-    const token = await this.getToken()
-    const {
-      data: { data_result },
-    } = await axios.post<IFinesResponse>(
-      config.gercUrl,
-      {
-        method,
-        token: 'gerc_token',
-        data: transformedBody,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    )
-    return data_result
+    return fines
+  }
+
+  private getFinesByDriverLicense(body) {
+    return ''
+  }
+
+  private getFinesByDriverDocument(body) {
+
+    return ''
+  }
+
+  private getFinesByInn(body) {
+    return ''
+  }
+
+  private getFinesByTechnicalPassport(body) {
+    return ''
   }
 
   private transformDriverLicense(driverLicense) {

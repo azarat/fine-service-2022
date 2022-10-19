@@ -28,17 +28,16 @@ class Gerz {
     nDoc: string,
     licensePlate: string,
   ): Promise<IFine> {
-    const token = await this.getToken()
-    const {
-      data: { data_result },
-    } = await axios.post<IFinesResponse>(
-      config.gercUrl,
+    const token = process.env.INFOTECH_TOKEN 
+    
+    const response = await axios.get<IFine[]>(
+      'https://services.infotech.gov.ua/v3/Test/SearchFines',
       {
-        method: 'SearchFines',
-        token: 'gerc_token',
-        data: { series, nDoc, licensePlate },
-      },
-      {
+        params: {
+          series, 
+          nDoc, 
+          licensePlate: licensePlate.replaceAll(' ', '')
+        },
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -46,23 +45,16 @@ class Gerz {
       },
     )
 
-    if (!data_result.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
-    return data_result[0]
+    if (!response.data.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+    return response.data[0]
   }
 
   public async getByMethod(type: string, body): Promise<any> {
-    const method = {
-      DRIVER_LICENSE: 'SearchFinesForLicense',
-      INN: 'SearchFinesByTaxpayerRregNumber',
-      TECHNICAL_PASSPORT: 'SearchFinesByCarRegCert',
-      DOCUMENT: 'SearchFinesForDocument',
-    }[type]
-
-    // const transformedBody = {
-    //   DRIVER_LICENSE: this.transformDriverLicense,
-    //   INN: this.transformInn,
-    //   TECHNICAL_PASSPORT: this.transformTechnicalPassport,
-    // }[type](body)
+    const transformedBody = {
+      DRIVER_LICENSE: this.transformDriverLicense,
+      INN: this.transformInn,
+      TECHNICAL_PASSPORT: this.transformTechnicalPassport,
+    }[type](body)
 
     console.log(type, body);
 
@@ -70,8 +62,8 @@ class Gerz {
       DRIVER_LICENSE: this.getFinesByDriverLicense,
       INN: this.getFinesByInn,
       TECHNICAL_PASSPORT: this.getFinesByTechnicalPassport,
-      DOCUMENT: this.getFinesByDriverDocument,
-    }[type](body)
+      DOCUMENT: this.getFinesByDocument,
+    }[type](transformedBody)
 
     return fines
   }
@@ -80,13 +72,47 @@ class Gerz {
     return ''
   }
 
-  private getFinesByDriverDocument(body) {
+  private async getFinesByDocument({ series, number, licensePlate }): Promise<IFine[]> {
+    const token = process.env.INFOTECH_TOKEN 
+    
+    const response = await axios.get<IFine[]>(
+      'https://services.infotech.gov.ua/v3/Test/SearchFinesForDocument',
+      {
+        params: {
+          series, 
+          number, 
+          licensePlate: licensePlate.replaceAll(' ', '')
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
 
-    return ''
+    if (!response.data.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+    return response.data
   }
 
-  private getFinesByInn(body) {
-    return ''
+  private async getFinesByInn({ rnokpp, licensePlate }): Promise<IFine[]> {
+    const token = process.env.INFOTECH_TOKEN 
+    
+    const response = await axios.get<IFine[]>(
+      'https://services.infotech.gov.ua/v3/Test/SearchFinesByTaxpayerRregNumber',
+      {
+        params: {
+          rnokpp, 
+          licensePlate: licensePlate.replaceAll(' ', '')
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+
+    if (!response.data.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+    return response.data
   }
 
   private getFinesByTechnicalPassport(body) {

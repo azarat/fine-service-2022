@@ -50,18 +50,11 @@ class Gerz {
   }
 
   public async getByMethod(type: string, body): Promise<any> {
-    const method = {
-      DRIVER_LICENSE: 'SearchFinesForLicense',
-      INN: 'SearchFinesByTaxpayerRregNumber',
-      TECHNICAL_PASSPORT: 'SearchFinesByCarRegCert',
-      DOCUMENT: 'SearchFinesForDocument',
-    }[type]
-
-    // const transformedBody = {
-    //   DRIVER_LICENSE: this.transformDriverLicense,
-    //   INN: this.transformInn,
-    //   TECHNICAL_PASSPORT: this.transformTechnicalPassport,
-    // }[type](body)
+    const transformedBody = {
+      DRIVER_LICENSE: this.transformDriverLicense,
+      INN: this.transformInn,
+      TECHNICAL_PASSPORT: this.transformTechnicalPassport,
+    }[type](body)
 
     console.log(type, body);
 
@@ -70,7 +63,7 @@ class Gerz {
       INN: this.getFinesByInn,
       TECHNICAL_PASSPORT: this.getFinesByTechnicalPassport,
       DOCUMENT: this.getFinesByDocument,
-    }[type](body)
+    }[type](transformedBody)
 
     return fines
   }

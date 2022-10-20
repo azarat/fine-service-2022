@@ -28,15 +28,14 @@ class Gerz {
     nDoc: string,
     licensePlate: string,
   ): Promise<IFine> {
-    const token = process.env.INFOTECH_TOKEN 
-    
+    const token = process.env.INFOTECH_TOKEN
     const response = await axios.get<IFine[]>(
       'https://services.infotech.gov.ua/v3/Test/SearchFines',
       {
         params: {
-          series, 
-          nDoc, 
-          licensePlate: licensePlate.replaceAll(' ', '')
+          series,
+          nDoc,
+          licensePlate: licensePlate.replaceAll(' ', ''),
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -45,7 +44,8 @@ class Gerz {
       },
     )
 
-    if (!response.data.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+    if (!response.data.length)
+      throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
     return response.data[0]
   }
 
@@ -70,8 +70,7 @@ class Gerz {
   }
 
   private async getFinesByDriverLicense({ series, number, date }) {
-    const infotechToken =
-      'TDOEoBSnfMB-kTgcLLi7Xe_u7qvbHQpu0BWgEqX2rhg3d1Kp3Rt8ZRKsKNOyD-jEjfMwoPXiA6jcT2nqh-pNJxXhF0L5DYFMD5ASp47opSLP0OPfEhinP25loDi0AkVKW7hcCcawyxKuQ4YEyydLCS5QsMHJv7Dt9d3QEsY1wBrFXlrhN_bh2ERqLSeXUMr8LorzWNB-JjqKIen756QN9oeQCAAHdf2aqcCZJal377JLvE0feehURTtU3-u1ZQSONuJeSgT1TAXZUMQpxd615RLZhPbVfAd2YXNee3cp9SSeIQXFgPeUpah3LVoi5y7bNf0mMIXpyWFTtNR88V9K7VFai8m0Qx09rCaoWW0jP5Dg_OB-fclg5Tg4cXOsSkF7_l3qUOC0MAtDhn3UDF3uV42BiNUJ0khJ0fjGHQ0k54d8QihA2N0PQAuhmHY3dofhujmIPGuMkDY5-XCoEJWv1I3JtjG7PRWa1KTGsVxAbg1Wq3Y8XGDvJF0xxg-X1dHF'
+    const token = process.env.INFOTECH_TOKEN
     const response = await axios.post<IFinesResponse>(
       'https://services.infotech.gov.ua/v3/Test/SearchFinesForLicense',
       {
@@ -81,7 +80,7 @@ class Gerz {
       },
       {
         headers: {
-          Authorization: `Bearer ${infotechToken}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },
@@ -92,16 +91,19 @@ class Gerz {
     return response.data
   }
 
-  private async getFinesByDocument({ series, number, licensePlate }): Promise<IFine[]> {
-    const token = process.env.INFOTECH_TOKEN 
-    
+  private async getFinesByDocument({
+    series,
+    number,
+    licensePlate,
+  }): Promise<IFine[]> {
+    const token = process.env.INFOTECH_TOKEN
     const response = await axios.get<IFine[]>(
       'https://services.infotech.gov.ua/v3/Test/SearchFinesForDocument',
       {
         params: {
-          series, 
-          number, 
-          licensePlate: licensePlate.replaceAll(' ', '')
+          series,
+          number,
+          licensePlate: licensePlate.replaceAll(' ', ''),
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -110,19 +112,19 @@ class Gerz {
       },
     )
 
-    if (!response.data.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+    if (!response.data.length)
+      throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
     return response.data
   }
 
   private async getFinesByInn({ rnokpp, licensePlate }): Promise<IFine[]> {
-    const token = process.env.INFOTECH_TOKEN 
-    
+    const token = process.env.INFOTECH_TOKEN
     const response = await axios.get<IFine[]>(
       'https://services.infotech.gov.ua/v3/Test/SearchFinesByTaxpayerRregNumber',
       {
         params: {
-          rnokpp, 
-          licensePlate: licensePlate.replaceAll(' ', '')
+          rnokpp,
+          licensePlate: licensePlate.replaceAll(' ', ''),
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -131,13 +133,13 @@ class Gerz {
       },
     )
 
-    if (!response.data.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+    if (!response.data.length)
+      throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
     return response.data
   }
 
   private async getFinesByTechnicalPassport({ series, number, licensePlate }) {
-    const infotechToken =
-      'TDOEoBSnfMB-kTgcLLi7Xe_u7qvbHQpu0BWgEqX2rhg3d1Kp3Rt8ZRKsKNOyD-jEjfMwoPXiA6jcT2nqh-pNJxXhF0L5DYFMD5ASp47opSLP0OPfEhinP25loDi0AkVKW7hcCcawyxKuQ4YEyydLCS5QsMHJv7Dt9d3QEsY1wBrFXlrhN_bh2ERqLSeXUMr8LorzWNB-JjqKIen756QN9oeQCAAHdf2aqcCZJal377JLvE0feehURTtU3-u1ZQSONuJeSgT1TAXZUMQpxd615RLZhPbVfAd2YXNee3cp9SSeIQXFgPeUpah3LVoi5y7bNf0mMIXpyWFTtNR88V9K7VFai8m0Qx09rCaoWW0jP5Dg_OB-fclg5Tg4cXOsSkF7_l3qUOC0MAtDhn3UDF3uV42BiNUJ0khJ0fjGHQ0k54d8QihA2N0PQAuhmHY3dofhujmIPGuMkDY5-XCoEJWv1I3JtjG7PRWa1KTGsVxAbg1Wq3Y8XGDvJF0xxg-X1dHF'
+    const token = process.env.INFOTECH_TOKEN
     const response = await axios.post<IFinesResponse>(
       'https://services.infotech.gov.ua/v3/Test/SearchFinesByCarRegCert',
       {
@@ -147,7 +149,7 @@ class Gerz {
       },
       {
         headers: {
-          Authorization: `Bearer ${infotechToken}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },
@@ -158,24 +160,10 @@ class Gerz {
     return response.data
   }
 
-  // public replaceMethod(data): any {
-  //   data = data.replace(' ', '')
-  //   data = data.replace(';', '')
-  //   data = data.replace(',', '')
-  //   data = data.replace('-', '')
-  //   return data.toUpperCase()
-  // }
-
   private async transformDriverLicense({ series, number, date }) {
-    series = series.replaceAll(' ', '').toUpperCase()
-    series = series.replaceAll(';', '')
-    series = series.replaceAll(',', '')
-    number = number.replaceAll(' ', '')
-    number = number.replaceAll(';', '')
-    number = number.replaceAll(',', '')
-    date = date.replaceAll(' ', '')
-    date = date.replaceAll(';', '')
-    date = date.replaceAll(',', '')
+    series = series.replaceAll(/[ ,;]/g, '').toUpperCase()
+    number = number.replaceAll(/[ ,;]/g, '')
+    date = date.replaceAll(/[ ,;]/g, '')
     return {
       series,
       number,
@@ -184,12 +172,8 @@ class Gerz {
   }
 
   private transformInn({ number, carNumber }) {
-    carNumber = carNumber.replaceAll(' ', '').toUpperCase()
-    carNumber = carNumber.replaceAll(';', '')
-    carNumber = carNumber.replaceAll(',', '')
-    number = number.replaceAll(' ', '')
-    number = number.replaceAll(';', '')
-    number = number.replaceAll(',', '')
+    carNumber = carNumber.replaceAll(/[ ,;]/g, '').toUpperCase()
+    number = number.replaceAll(/[ ,;]/g, '')
     return {
       number,
       carNumber,
@@ -197,15 +181,9 @@ class Gerz {
   }
 
   private transformTechnicalPassport({ series, number, carNumber }) {
-    carNumber = carNumber.replaceAll(' ', '').toUpperCase()
-    carNumber = carNumber.replaceAll(';', '')
-    carNumber = carNumber.replaceAll(',', '')
-    number = number.replaceAll(' ', '')
-    number = number.replaceAll(';', '')
-    number = number.replaceAll(',', '')
-    series = series.replaceAll(' ', '').toUpperCase()
-    series = series.replaceAll(';', '')
-    series = series.replaceAll(',', '')
+    carNumber = carNumber.replaceAll(/[ ,;]/g, '').toUpperCase()
+    number = number.replaceAll(/[ ,;]/g, '')
+    series = series.replaceAll(/[ ,;]/g, '').toUpperCase()
     return {
       series,
       number,
@@ -214,15 +192,9 @@ class Gerz {
   }
 
   private transformDriverDocument({ series, number, carNumber }) {
-    carNumber = carNumber.replaceAll(' ', '').toUpperCase()
-    carNumber = carNumber.replaceAll(';', '')
-    carNumber = carNumber.replaceAll(',', '')
-    number = number.replaceAll(' ', '')
-    number = number.replaceAll(';', '')
-    number = number.replaceAll(',', '')
-    series = series.replaceAll(' ', '').toUpperCase()
-    series = series.replaceAll(';', '')
-    series = series.replaceAll(',', '')
+    carNumber = carNumber.replaceAll(/[ ,;]/g, '').toUpperCase()
+    number = number.replaceAll(/[ ,;]/g, '')
+    series = series.replaceAll(/[ ,;]/g, '').toUpperCase()
     return {
       series,
       number,

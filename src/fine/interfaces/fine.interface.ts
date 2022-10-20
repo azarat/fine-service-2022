@@ -35,5 +35,5 @@ export interface IFine {
 }
 
 export interface IFinesResponse {
-  data_result: IFine[]
+  data: IFine[]
 }

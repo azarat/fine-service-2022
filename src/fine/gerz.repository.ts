@@ -49,6 +49,44 @@ class Gerz {
     return response.data[0]
   }
 
+  public async getAllFines(): Promise<any[]> {
+    const token = process.env.INFOTECH_TOKEN
+    const date = new Date(Date.now())
+    const day = date.getDate()
+    const month = date.getMonth() + 1
+    const year = date.getFullYear()
+    const response = await axios.get<IFine[]>(
+      'https://services.infotech.gov.ua/v3/Test/GetFines',
+      {
+        params: {
+          startDateTime: `${day}.${month}.${year} 00:00:00`,
+          endDateTime: `${day + 1}.${month}.${year} 00:00:00`,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+
+    if (!response.data.length)
+      throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+    return response.data
+  }
+
+  public async getAllUsersByLicense(driverLicenses): Promise<any> {
+    console.log('driverLicenses', driverLicenses)
+    const arr = await Promise.all(
+      driverLicenses.map(async (driverLicense) => {
+        const response = await axios.get<any>(
+          `http://localhost:8080/documents/getUserByDriverLicense/${driverLicense}`,
+        )
+        return response.data
+      }),
+    )
+    console.log('xxxxxxxxxxxx', arr)
+  }
+
   public async getByMethod(type: string, body): Promise<any> {
     const transformedBody = {
       DRIVER_LICENSE: this.transformDriverLicense,

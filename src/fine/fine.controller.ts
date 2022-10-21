@@ -1,7 +1,11 @@
 import { FastifyInstance } from 'fastify'
 
 import fineService from './fine.service'
-import { ByDocumentSchema, ByTokenSchema } from './schemas/swagger.schemas'
+import {
+  ByDocumentSchema,
+  ScanSchema,
+  ByTokenSchema,
+} from './schemas/swagger.schemas'
 import { VerifyUserMiddleware } from '../middlewares/verify-user.middleware'
 import { ByDocumentDTO } from './dto/by-document.dto'
 import { Query } from '../types'
@@ -20,6 +24,17 @@ const fineController = (server: FastifyInstance, _, done): void => {
         decreeNumber,
         carsNumber,
       )
+    },
+  )
+
+  server.get<Query<ByDocumentDTO>>(
+    '/scan',
+    {
+      // schema: ScanSchema,
+      // preValidation: VerifyUserMiddleware,
+    },
+    async (req) => {
+      return fineService.getAllFines()
     },
   )
 

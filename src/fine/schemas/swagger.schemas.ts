@@ -34,8 +34,9 @@ export const ScanSchema = {
   querystring: {
     type: 'object',
     required: [],
-    // properties: {
-    // },
+    properties: {
+      // decreeSeries: { type: 'string' },
+    },
   },
   headers: {
     token: {

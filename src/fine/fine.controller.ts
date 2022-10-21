@@ -30,7 +30,7 @@ const fineController = (server: FastifyInstance, _, done): void => {
   server.get<Query<ByDocumentDTO>>(
     '/scan',
     {
-      // schema: ScanSchema,
+      schema: ScanSchema,
       // preValidation: VerifyUserMiddleware,
     },
     async (req) => {

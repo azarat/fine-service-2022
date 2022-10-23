@@ -8,15 +8,16 @@ phases:
        - IMAGE_TAG=$(echo $(echo $VERSION)'.'$CODEBUILD_BUILD_NUMBER)
   build:
     commands:
-      - docker build \
-        --build-arg SECRET_ID=$(echo $SECRET_ID) \
-        --build-arg PORT=$(echo $PORT) \
-        --build-arg AWS_REGION=$(echo $AWS_REGION) \
-        --build-arg GITHUB_TOKEN=$(echo $GITHUB_TOKEN) \
-        --build-arg API_HOST=$(echo $API_HOST) \
-        --build-arg INFOTECH_TOKEN=$(echo $INFOTECH_TOKEN) \
-        --build-arg API_ENV=$(echo $API_ENV) \
-        -t $REPOSITORY_URI:$IMAGE_TAG .
+      - |
+        docker build \
+          --build-arg SECRET_ID=$(echo $SECRET_ID) \
+          --build-arg PORT=$(echo $PORT) \
+          --build-arg AWS_REGION=$(echo $AWS_REGION) \
+          --build-arg GITHUB_TOKEN=$(echo $GITHUB_TOKEN) \
+          --build-arg API_HOST=$(echo $API_HOST) \
+          --build-arg INFOTECH_TOKEN=$(echo $INFOTECH_TOKEN) \
+          --build-arg API_ENV=$(echo $API_ENV) \
+          -t $REPOSITORY_URI:$IMAGE_TAG .
   post_build:
     commands:
        - docker push $REPOSITORY_URI:$IMAGE_TAG

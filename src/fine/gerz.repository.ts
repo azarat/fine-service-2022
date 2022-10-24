@@ -76,16 +76,39 @@ class Gerz {
 
   public async getAllUsersByLicense(driverLicenses): Promise<any> {
     console.log('driverLicenses', driverLicenses)
-    const arr = await Promise.all(
-      driverLicenses.map(async (driverLicense) => {
-        const response = await axios.get<any>(
-          `http://localhost:8080/documents/getUserByDriverLicense/${driverLicense}`,
-        )
-        return response.data
-      }),
-    )
-    console.log('xxxxxxxxxxxx', arr)
+    try {
+      const users = await Promise.all(
+        driverLicenses.map(async (driverLicense) => {
+          if (driverLicense == '') {
+            return
+          }
+          const encodedDriverLicense = encodeURI(driverLicense)
+          const response = await axios.get<any>(
+            `http://localhost:8080/documents/getUserByDriverLicense?driverLicense=${encodedDriverLicense}`,
+          )
+          return response.data
+        }),
+      )
+      return users
+    } catch (error) {
+      console.log(error)
+      return error
+    }
+    // console.log('xxxxxxxxxxxx', users)
   }
+
+  // public async getDevicesTokens(users): Promise<any> {
+  //   console.log('driverLicenses', users)
+  //   const devicesTokens = await Promise.all(
+  //     users.map(async (user) => {
+  //       const response = await axios.get<any>(
+  //         `http://http://localhost:8080/user/${user}`,
+  //       )
+  //       return response.data.deviceToken
+  //     }),
+  //   )
+  //   console.log('xxxxxxxxxxxx', devicesTokens)
+  // }
 
   public async getByMethod(type: string, body): Promise<any> {
     const transformedBody = {

@@ -1,27 +1,29 @@
 import axios from 'axios'
 
 import config from '../config/config'
-import { IAccessTokenData } from './interfaces/access-token.interface'
+// import { IAccessTokenData } from './interfaces/access-token.interface' // DEPRECATED
 import { IFine, IFinesResponse } from './interfaces/fine.interface'
+import { IUserResponse, IUserResponceData } from './interfaces/user.interfaces'
 import HttpError from '../errors/http-error'
 
 class Gerz {
-  private async getToken(): Promise<string> {
-    const token = Buffer.from(
-      `${config.clientId}:${config.clientSecret}`,
-    ).toString('base64')
+  // DEPRECATED
+  // private async getToken(): Promise<string> {
+  //   const token = Buffer.from(
+  //     `${config.clientId}:${config.clientSecret}`,
+  //   ).toString('base64')
 
-    const {
-      data: { access_token },
-    } = await axios.get<IAccessTokenData>(config.gercAuthUrl, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        Authorization: `Basic ${token}`,
-      },
-      data: 'grant_type=client_credentials',
-    })
-    return access_token
-  }
+  //   const {
+  //     data: { access_token },
+  //   } = await axios.get<IAccessTokenData>(config.gercAuthUrl, {
+  //     headers: {
+  //       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+  //       Authorization: `Basic ${token}`,
+  //     },
+  //     data: 'grant_type=client_credentials',
+  //   })
+  //   return access_token
+  // }
 
   public async getByDocument(
     series: string,
@@ -83,48 +85,51 @@ class Gerz {
           }
           const encodedDriverLicense = encodeURI(driverLicense)
           const response = await axios.get<any>(
-            `${config.apiHost}:8080/v1/Dev/ProfileService/documents/getUserByDriverLicense?driverLicense=${encodedDriverLicense}`,
+            `${config.apiHost}${config.apiHost == "http://localhost" ? (":" + config.port) : ""}/${config.apiEnv}/ProfileService/documents/getUserByDriverLicense?driverLicense=${encodedDriverLicense}`,
           )
+
           if (response.data !== '') {
             return response.data
           }
         }),
       )
-
+      
       const filteredUsers = users.filter((user) => {
         return user !== undefined
       })
+
+      
       if (filteredUsers.length > 0) {
         return filteredUsers
       }
 
-      throw new HttpError(HttpError.USERS_NOT_FOUND, 404)
+      return []
     } catch (error) {
-      console.log(error)
-      return error
+      return []
     }
   }
 
   public async getDevicesTokens(users): Promise<any> {
-    const devicesTokens = await Promise.all(
+    const devicesTokens = await Promise.all<Array<string[]>>(
       users.map(async (user) => {
         try {
-          const response = await axios.get<any>(
-            `${config.apiHost}:8080/v1/Dev/ProfileService/user/${user.user}`,
+          const response = await axios.get<IUserResponceData>(
+            `${config.apiHost}${config.apiHost == "http://localhost" ? (":" + config.port) : ""}/${config.apiEnv}/ProfileService/user/${user.user}`,
             {
               headers: {
                 secret: config.userSdkSecret,
                 'Content-Type': 'application/json',
-              },
+              }
             },
           )
+
           return response.data.deviceToken
         } catch (error) {
-          console.log(error)
           return []
         }
       }),
     )
+    
     const filteredDevicesTokens = devicesTokens.filter((devicesToken) => {
       return devicesToken.length > 0
     })
@@ -138,8 +143,6 @@ class Gerz {
       TECHNICAL_PASSPORT: this.transformTechnicalPassport,
       // DOCUMENT: this.transformDriverDocument,
     }[type](body)
-
-    console.log(type, body)
 
     const fines = {
       DRIVER_LICENSE: this.getFinesByDriverLicense,

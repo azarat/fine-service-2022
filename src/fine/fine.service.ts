@@ -18,8 +18,18 @@ class FineService {
     const driverLicenses = fines.map(
       (fine) => fine.SDriverLic + fine.NDriverLic,
     )
-    const users = await Gerz.getAllUsersByLicense(driverLicenses)
+
+    let users = []
+    try {
+      users = await Gerz.getAllUsersByLicense(driverLicenses)
+    } catch (error) {
+      return []
+    }
+
     const devicesTokens = await Gerz.getDevicesTokens(users)
+
+    // Send Push requests
+
     return devicesTokens
   }
 

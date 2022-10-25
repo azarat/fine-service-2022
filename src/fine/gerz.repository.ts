@@ -35,7 +35,7 @@ class Gerz {
         params: {
           series,
           nDoc,
-          licensePlate: licensePlate.replaceAll(' ', ''),
+          licensePlate,
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -136,7 +136,7 @@ class Gerz {
       DRIVER_LICENSE: this.transformDriverLicense,
       INN: this.transformInn,
       TECHNICAL_PASSPORT: this.transformTechnicalPassport,
-      DOCUMENT: this.transformDriverDocument,
+      // DOCUMENT: this.transformDriverDocument,
     }[type](body)
 
     console.log(type, body)
@@ -145,7 +145,7 @@ class Gerz {
       DRIVER_LICENSE: this.getFinesByDriverLicense,
       INN: this.getFinesByInn,
       TECHNICAL_PASSPORT: this.getFinesByTechnicalPassport,
-      DOCUMENT: this.getFinesByDocument,
+      // DOCUMENT: this.getFinesByDocument,
     }[type](transformedBody)
 
     return fines
@@ -173,31 +173,31 @@ class Gerz {
     return response.data
   }
 
-  private async getFinesByDocument({
-    series,
-    number,
-    licensePlate,
-  }): Promise<IFine[]> {
-    const token = process.env.INFOTECH_TOKEN
-    const response = await axios.get<IFine[]>(
-      'https://services.infotech.gov.ua/v3/Test/SearchFinesForDocument',
-      {
-        params: {
-          series,
-          number,
-          licensePlate: licensePlate.replaceAll(' ', ''),
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+  // private async getFinesByDocument({
+  //   series,
+  //   number,
+  //   licensePlate,
+  // }): Promise<IFine[]> {
+  //   const token = process.env.INFOTECH_TOKEN
+  //   const response = await axios.get<IFine[]>(
+  //     'https://services.infotech.gov.ua/v3/Test/SearchFinesForDocument',
+  //     {
+  //       params: {
+  //         series,
+  //         number,
+  //         licensePlate,
+  //       },
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //     },
+  //   )
 
-    if (!response.data.length)
-      throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
-    return response.data
-  }
+  //   if (!response.data.length)
+  //     throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+  //   return response.data
+  // }
 
   private async getFinesByInn({ rnokpp, licensePlate }): Promise<IFine[]> {
     const token = process.env.INFOTECH_TOKEN
@@ -206,7 +206,7 @@ class Gerz {
       {
         params: {
           rnokpp,
-          licensePlate: licensePlate.replaceAll(' ', ''),
+          licensePlate,
         },
         headers: {
           Authorization: `Bearer ${token}`,

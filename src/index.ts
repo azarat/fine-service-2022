@@ -23,7 +23,9 @@ app.register(swagger, {
   },
 })
 app.register(fineController, { prefix: `/${config.apiEnv}/FineService/fines` })
-app.register(paymentController, { prefix: `/${config.apiEnv}/FineService/payment` })
+app.register(paymentController, {
+  prefix: `/${config.apiEnv}/FineService/payment`,
+})
 app.setErrorHandler((err, req, res) => {
   app.log.error(err)
   const message = err.message

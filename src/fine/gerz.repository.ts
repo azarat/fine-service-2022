@@ -75,7 +75,6 @@ class Gerz {
   }
 
   public async getAllUsersByLicense(driverLicenses): Promise<any> {
-    console.log('driverLicenses', driverLicenses)
     try {
       const users = await Promise.all(
         driverLicenses.map(async (driverLicense) => {
@@ -84,31 +83,53 @@ class Gerz {
           }
           const encodedDriverLicense = encodeURI(driverLicense)
           const response = await axios.get<any>(
-            `http://localhost:8080/documents/getUserByDriverLicense?driverLicense=${encodedDriverLicense}`,
+            `${config.apiHost}:8080/v1/Dev/ProfileService/documents/getUserByDriverLicense?driverLicense=${encodedDriverLicense}`,
           )
-          return response.data
+          if (response.data !== '') {
+            return response.data
+          }
         }),
       )
-      return users
+
+      const filteredUsers = users.filter((user) => {
+        return user !== undefined
+      })
+      if (filteredUsers.length > 0) {
+        return filteredUsers
+      }
+
+      throw new HttpError(HttpError.USERS_NOT_FOUND, 404)
     } catch (error) {
       console.log(error)
       return error
     }
-    // console.log('xxxxxxxxxxxx', users)
   }
 
-  // public async getDevicesTokens(users): Promise<any> {
-  //   console.log('driverLicenses', users)
-  //   const devicesTokens = await Promise.all(
-  //     users.map(async (user) => {
-  //       const response = await axios.get<any>(
-  //         `http://http://localhost:8080/user/${user}`,
-  //       )
-  //       return response.data.deviceToken
-  //     }),
-  //   )
-  //   console.log('xxxxxxxxxxxx', devicesTokens)
-  // }
+  public async getDevicesTokens(users): Promise<any> {
+    const devicesTokens = await Promise.all(
+      users.map(async (user) => {
+        try {
+          const response = await axios.get<any>(
+            `${config.apiHost}:8080/v1/Dev/ProfileService/user/${user.user}`,
+            {
+              headers: {
+                secret: config.userSdkSecret,
+                'Content-Type': 'application/json',
+              },
+            },
+          )
+          return response.data.deviceToken
+        } catch (error) {
+          console.log(error)
+          return []
+        }
+      }),
+    )
+    const filteredDevicesTokens = devicesTokens.filter((devicesToken) => {
+      return devicesToken.length > 0
+    })
+    return filteredDevicesTokens
+  }
 
   public async getByMethod(type: string, body): Promise<any> {
     const transformedBody = {

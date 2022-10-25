@@ -13,18 +13,14 @@ class FineService {
     return Gerz.getByDocument(series, nDoc, licensePlate)
   }
 
-  public async getAllFines(): Promise<any> /*  Promise<IFine[]> */ {
+  public async getAllFines(): Promise<any> {
     const fines = await Gerz.getAllFines()
     const driverLicenses = fines.map(
       (fine) => fine.SDriverLic + fine.NDriverLic,
     )
     const users = await Gerz.getAllUsersByLicense(driverLicenses)
-    // const devicesToken = await Gerz.getDevicesTokens(users)
-    // users.map(user => {
-    // user.devicesToken
-    // запит на фаєрбейс
-    // })
-    return users
+    const devicesTokens = await Gerz.getDevicesTokens(users)
+    return devicesTokens
   }
 
   public async getFinesByToken(token: string): Promise<IFine[]> {

@@ -19,7 +19,7 @@ class Fcm {
           'https://fcm.googleapis.com/fcm/send',
           {
             "registration_ids": devicesTokens,
-            "notification": {
+            "data": {
                 "title": title,
                 "body": msg
             }

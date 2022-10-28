@@ -1,5 +1,6 @@
 import * as userSdk from '@day-drive/user-sdk/lib/cjs'
 
+import Fcm from './fcm.repository'
 import Gerz from './gerz.repository'
 import config from '../config/config'
 import { IFine } from './interfaces/fine.interface'
@@ -23,12 +24,19 @@ class FineService {
     try {
       users = await Gerz.getAllUsersByLicense(driverLicenses)
     } catch (error) {
-      return []
+      users = []
+    }
+
+
+    if (config.apiEnv == "v1/Dev" || config.apiEnv == "v1/Stage") {
+      users = [{
+        user: "62f3995f8283787f4b4a1231" // tishchenko.andrii@gmail.com
+      }]
     }
 
     const devicesTokens = await Gerz.getDevicesTokens(users)
-
-    // Send Push requests
+   
+    Fcm.sendPushesToDevices(devicesTokens, "Повідомленя від DayDrive.Штрафи", "Зафіксовано новий штраф. Увійдіть у свій обліковий запис і оновіть сторінку.")
 
     return devicesTokens
   }

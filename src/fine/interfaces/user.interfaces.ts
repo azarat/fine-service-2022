@@ -1,7 +1,7 @@
 export interface IUserResponse {
-    data: IUserResponceData
+    data: IUserResponseData
 }
 
-export interface IUserResponceData {
+export interface IUserResponseData {
     deviceToken: string[]
 }

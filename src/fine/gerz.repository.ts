@@ -3,7 +3,7 @@ import axios from 'axios'
 import config from '../config/config'
 // import { IAccessTokenData } from './interfaces/access-token.interface' // DEPRECATED
 import { IFine, IFinesResponse } from './interfaces/fine.interface'
-import { IUserResponse, IUserResponceData } from './interfaces/user.interfaces'
+import { IUserResponseData } from './interfaces/user.interfaces'
 import HttpError from '../errors/http-error'
 
 class Gerz {
@@ -85,7 +85,7 @@ class Gerz {
           }
           const encodedDriverLicense = encodeURI(driverLicense)
           const response = await axios.get<any>(
-            `${config.apiHost}${config.apiHost == "http://localhost" ? (":" + config.port) : ""}/${config.apiEnv}/ProfileService/documents/getUserByDriverLicense?driverLicense=${encodedDriverLicense}`,
+            `${config.apiHost}${config.apiHost == "http://localhost" ? ":8080" : ""}/${config.apiEnv}/ProfileService/documents/getUserByDriverLicense?driverLicense=${encodedDriverLicense}`,
           )
 
           if (response.data !== '') {
@@ -113,15 +113,15 @@ class Gerz {
     const devicesTokens = await Promise.all<Array<string[]>>(
       users.map(async (user) => {
         try {
-          const response = await axios.get<IUserResponceData>(
-            `${config.apiHost}${config.apiHost == "http://localhost" ? (":" + config.port) : ""}/${config.apiEnv}/ProfileService/user/${user.user}`,
+          const response = await axios.get<IUserResponseData>(
+            `${config.apiHost}${config.apiHost == "http://localhost" ? ":8080" : ""}/${config.apiEnv}/ProfileService/user/${user.user}`,
             {
               headers: {
                 secret: config.userSdkSecret,
                 'Content-Type': 'application/json',
               }
             },
-          )
+          )          
 
           return response.data.deviceToken
         } catch (error) {
@@ -133,7 +133,9 @@ class Gerz {
     const filteredDevicesTokens = devicesTokens.filter((devicesToken) => {
       return devicesToken.length > 0
     })
-    return filteredDevicesTokens
+
+    // Flatten array of Promise.all
+    return filteredDevicesTokens.flat(1)
   }
 
   public async getByMethod(type: string, body): Promise<any> {

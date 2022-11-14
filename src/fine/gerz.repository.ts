@@ -37,7 +37,7 @@ class Gerz {
         params: {
           series,
           nDoc,
-          licensePlate,
+          licensePlate: licensePlate.replaceAll(/[ ,;]/g, ''),
         },
         headers: {
           Authorization: `Bearer ${token}`,

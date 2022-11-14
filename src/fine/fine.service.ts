@@ -20,23 +20,48 @@ class FineService {
       (fine) => fine.SDriverLic + fine.NDriverLic,
     )
 
-    let users = []
+    const technicalPassports = fines.map(
+      (fine) => fine.SRegCert + fine.NRegCert,
+    )
+
+    let usersByDriverLicense = []
+    let usersByTechPass = []
     try {
-      users = await Gerz.getAllUsersByLicense(driverLicenses)
+      usersByDriverLicense = await Gerz.getAllUsersByLicense(driverLicenses)
     } catch (error) {
-      users = []
+      usersByDriverLicense = []
     }
 
-
-    if (config.apiEnv == "v1/Dev" || config.apiEnv == "v1/Stage") {
-      users = [{
-        user: "62f3995f8283787f4b4a1231" // tishchenko.andrii@gmail.com
-      }]
+    try {
+      usersByTechPass = await Gerz.getAllUsersByTechnicalPassport(
+        technicalPassports,
+      )
+    } catch (error) {
+      usersByTechPass = []
     }
 
-    const devicesTokens = await Gerz.getDevicesTokens(users)
-   
-    Fcm.sendPushesToDevices(devicesTokens, "Повідомленя від DayDrive.Штрафи", "Зафіксовано новий штраф. Увійдіть у свій обліковий запис і оновіть сторінку.")
+    const allUsersId = [
+      ...usersByDriverLicense.map((user) => user.user),
+      ...usersByTechPass.map((user) => user.user),
+    ]
+
+    const filteredUsersId = [...new Set(allUsersId)]
+
+    // if (config.apiEnv == 'v1/Dev' || config.apiEnv == 'v1/Stage') {
+    //   users = [
+    //     {
+    //       user: '62f3995f8283787f4b4a1231', // tishchenko.andrii@gmail.com
+    //     },
+    //   ]
+    // }
+
+    const devicesTokens = await Gerz.getDevicesTokens(filteredUsersId)
+
+    // Fcm.sendPushesToDevices(
+    //   devicesTokens,
+    //   'Повідомленя від DayDrive.Штрафи',
+    //   'Зафіксовано новий штраф. Увійдіть у свій обліковий запис і оновіть сторінку.',
+    // )
 
     return devicesTokens
   }

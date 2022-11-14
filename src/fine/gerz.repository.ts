@@ -85,7 +85,11 @@ class Gerz {
           }
           const encodedDriverLicense = encodeURI(driverLicense)
           const response = await axios.get<any>(
-            `${config.apiHost}${config.apiHost == "http://localhost" ? ":8080" : ""}/${config.apiEnv}/ProfileService/documents/getUserByDriverLicense?driverLicense=${encodedDriverLicense}`,
+            `${config.apiHost}${
+              config.apiHost == 'http://localhost' ? ':8080' : ''
+            }/${
+              config.apiEnv
+            }/ProfileService/documents/getUserByDriverLicense?driverLicense=${encodedDriverLicense}`,
           )
 
           if (response.data !== '') {
@@ -93,12 +97,48 @@ class Gerz {
           }
         }),
       )
-      
+
       const filteredUsers = users.filter((user) => {
         return user !== undefined
       })
 
-      
+      if (filteredUsers.length > 0) {
+        return filteredUsers
+      }
+
+      return []
+    } catch (error) {
+      return []
+    }
+  }
+
+  public async getAllUsersByTechnicalPassport(
+    technicalPassports,
+  ): Promise<any> {
+    try {
+      const users = await Promise.all(
+        technicalPassports.map(async (technicalPassport) => {
+          if (technicalPassport == '') {
+            return
+          }
+          const encodedTechnicalPassport = encodeURI(technicalPassport)
+          const response = await axios.get<any>(
+            `${config.apiHost}${
+              config.apiHost == 'http://localhost' ? ':8080' : ''
+            }/${
+              config.apiEnv
+            }/ProfileService/documents/getUserByTechnicalPassport?technicalPassport=${encodedTechnicalPassport}`,
+          )
+          if (response.data !== '') {
+            return response.data
+          }
+        }),
+      )
+
+      const filteredUsers = users.filter((user) => {
+        return user !== undefined
+      })
+
       if (filteredUsers.length > 0) {
         return filteredUsers
       }
@@ -114,14 +154,16 @@ class Gerz {
       users.map(async (user) => {
         try {
           const response = await axios.get<IUserResponseData>(
-            `${config.apiHost}${config.apiHost == "http://localhost" ? ":8080" : ""}/${config.apiEnv}/ProfileService/user/${user.user}`,
+            `${config.apiHost}${
+              config.apiHost == 'http://localhost' ? ':8080' : ''
+            }/${config.apiEnv}/ProfileService/user/${user}`,
             {
               headers: {
                 secret: config.userSdkSecret,
                 'Content-Type': 'application/json',
-              }
+              },
             },
-          )          
+          )
 
           return response.data.deviceToken
         } catch (error) {
@@ -129,7 +171,7 @@ class Gerz {
         }
       }),
     )
-    
+
     const filteredDevicesTokens = devicesTokens.filter((devicesToken) => {
       return devicesToken.length > 0
     })

@@ -13,7 +13,7 @@ class Fcm {
         title: string,
         msg: string
     ): Promise<boolean> {
-        console.log("devicesTokens", devicesTokens);
+        // console.log("devicesTokens", devicesTokens);
         
         const response = await axios.post<IFcmResponseData>(
           'https://fcm.googleapis.com/fcm/send',
@@ -32,7 +32,7 @@ class Fcm {
           },
         )
 
-        console.log(response.data);
+        // console.log(response.data);
     
         return true
     }

@@ -13,7 +13,7 @@ export interface IFine {
   decision: string | null
   ddecision: string | null
   penalty: string | null
-  sumpenalty: string | null
+  sumPenalty: string | null
   paidpenalty: string | null
   licenseplate: string | null
   brand: string | null

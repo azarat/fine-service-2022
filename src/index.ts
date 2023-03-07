@@ -46,7 +46,7 @@ const start = async (): Promise<void> => {
   try {
     await config.init()
     await mongoose.connect(config.mongoUri)
-    await app.listen(config.port, '0.0.0.0')
+    await app.listen(config.port, '172.20.10.2')
   } catch (err) {
     app.log.error(err)
     process.exit(1)

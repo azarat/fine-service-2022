@@ -13,7 +13,7 @@ export interface IFine {
   decision: string | null
   ddecision: string | null
   penalty: string | null
-  sumPenalty: string | null
+  sumpenalty: string | null
   paidpenalty: string | null
   licenseplate: string | null
   brand: string | null
@@ -28,6 +28,10 @@ export interface IFine {
   dcanceled: string | null
   nprotocol: string | null
   sprotocol: string | null
+  sdriverlic: string | null
+  ndriverlic: string | null
+  nregcert: string | null
+  sregcert: string | null
   paidinfo: string | null
   typefine: string | null
   datedelivery: string | null
@@ -35,5 +39,5 @@ export interface IFine {
 }
 
 export interface IFinesResponse {
-  data: IFine[]
+  data_result: IFine[]
 }

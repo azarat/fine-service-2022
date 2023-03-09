@@ -99,7 +99,6 @@ class PaymentService {
       lang,
       description,
       paymentData,
-
     }: IInit,
     type: PaymentSerivceEnum,
   ): Promise<FeeResponseDTO> {
@@ -112,38 +111,33 @@ class PaymentService {
     )
     const { doc_id } = paymentData
     const { _id } = await paymentRepository.createPayment(userId, doc_id, type)
-    // const PaymentSdk = new Payment(
-    //   _id,
-    //   sumpenalty * 100,
-    //   config.backref,
-    //   config.notify,
-    //   paymentData,
-    //   lang as 'ru' | 'ua',
-    //   description,
-    //   userId,
-    //   phone,
-    //   config.privateKey,
-    //   config.paymentClientId,
-    //   config.paymentClientSecret,
-    //   config.siteId,
-    // )
+    const PaymentSdk = new Payment(
+      _id,
+      sumpenalty * 100,
+      config.backref,
+      config.notify,
+      paymentData,
+      lang as 'ru' | 'ua',
+      description,
+      userId,
+      phone,
+      config.privateKey,
+      config.paymentClientId,
+      config.paymentClientSecret,
+      config.siteId,
+    )
 
-    const { operId } = await paymentRepository.findLastOperId()
+    const { fee, total, oper_id, error } =
+      type === PaymentSerivceEnum.GOOGLE_PAY
+        ? await PaymentSdk.getGooglePayFee(config.siteId)
+        : await PaymentSdk.getApplePayFee(config.siteId)
 
-    const oper_id = operId + 1
-    const total = sumpenalty
-
-    // const { fee, total, oper_id, error } =
-    //   type === PaymentSerivceEnum.GOOGLE_PAY
-    //     ? await PaymentSdk.getGooglePayFee(config.siteId)
-    //     : await PaymentSdk.getApplePayFee(config.siteId)
-
-    // if (error) await this.handleGercError({ orderId: _id.toString() }, error)
+    if (error) await this.handleGercError({ orderId: _id.toString() }, error)
 
     await paymentRepository.updatePayment(_id, oper_id)
     return {
       orderId: _id,
-      fee: total,
+      fee,
       total,
       operId: oper_id,
     }
@@ -307,12 +301,12 @@ class PaymentService {
     decreeSeries: string,
   ): Promise<number> {
     try {
-      const { sumPenalty } = await fineService.getFinesByDocument(
+      const { sumpenalty } = await fineService.getFinesByDocument(
         decreeSeries,
         decreeNumber,
         carsNumber,
       )
-      return +sumPenalty
+      return +sumpenalty
     } catch (error) {
       throw new HttpError(HttpError.FINE_SUM_ERROR, 400)
     }

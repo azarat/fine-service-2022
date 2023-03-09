@@ -3,10 +3,6 @@ import { PaymentSerivceEnum, PaymentStatusEnum } from './payment.enums'
 import { PaymentDocument, Payment } from './schemas/payment.schema'
 
 class paymentRepository {
-  public async findLastOperId(): Promise<PaymentDocument> {
-    return Payment.findOne().sort({operId:-1}).limit(1)
-  }
-  
   public async createPayment(
     user: string,
     docId: string,

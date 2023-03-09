@@ -15,13 +15,28 @@ class FineService {
   }
 
   public async getAllFines(): Promise<any> {
-    const fines = await Gerz.getAllFines()
+    const currentDate = new Date()
+    const previousDate = new Date(currentDate.setDate(currentDate.getDate() - 1))
+
+    const previousDateY = previousDate.getFullYear();
+    const previousDateM = previousDate.getMonth() + 1; // Months start at 0!
+    const previousDateD = previousDate.getDate();
+
+    const currentDateY = currentDate.getFullYear();
+    const currentDateM = currentDate.getMonth() + 1; // Months start at 0!
+    const currentDateD = currentDate.getDate();
+
+    const fines = await Gerz.getAllFines(
+      previousDateD + "." + previousDateM + "." + previousDateY + " 04:00:00",
+      currentDateD + "." + currentDateM + "." + currentDateY + " 04:00:00"
+    )
+
     const driverLicenses = fines.map(
-      (fine) => fine.SDriverLic + fine.NDriverLic,
+      (fine) => fine.sdriverlic + fine.ndriverlic,
     )
 
     const technicalPassports = fines.map(
-      (fine) => fine.SRegCert + fine.NRegCert,
+      (fine) => fine.sregcert + fine.nregcert,
     )
 
     let usersByDriverLicense = []

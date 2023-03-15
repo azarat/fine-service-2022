@@ -49,8 +49,8 @@ class Config {
     this.apiEnv = process.env.API_ENV || 'v1'
     this.apiHost = process.env.API_HOST
     this.fcmToken = process.env.FCM_TOKEN
-    this.notify = `${this.apiHost}${this.apiHost == "http://localhost" ? (":" + this.port) : ""}/${this.apiEnv}/FineService/payment/notify`
-    this.backref = `${this.apiHost}${this.apiHost == "http://localhost" ? (":" + this.port) : ""}/${this.apiEnv}/FineService/payment/thanks`
+    this.notify = `${this.apiHost}${this.apiHost == "http://172.20.10.2" ? (":" + this.port) : ""}/${this.apiEnv}/FineService/payment/notify`
+    this.backref = `${this.apiHost}${this.apiHost == "http://172.20.10.2" ? (":" + this.port) : ""}/${this.apiEnv}/FineService/payment/thanks`
   }
 
   async init(): Promise<void> {

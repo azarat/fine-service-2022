@@ -17,7 +17,7 @@ class Gerz {
     } = await axios.get<IAccessTokenData>(config.gercAuthUrl, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Basic ${token}`,
       },
       data: 'grant_type=client_credentials',
     })
@@ -37,7 +37,11 @@ class Gerz {
       {
         method: 'SearchFines',
         token: 'gerc_token',
-        data: { series, nDoc, licensePlate },
+        data: { 
+          series, 
+          nDoc, 
+          licensePlate: licensePlate.replaceAll(' ', '')
+        },
       },
       {
         headers: {

@@ -301,13 +301,27 @@ class PaymentService {
     decreeSeries: string,
   ): Promise<number> {
     try {
-      const { sumpenalty } = await fineService.getFinesByDocument(
+      const fineData = await fineService.getFinesByDocument(
         decreeSeries,
         decreeNumber,
         carsNumber,
       )
+
+      console.log("fineData");
+      console.log(fineData);
+      console.log("fineData");
+      
+
+      const { sumpenalty } = fineData
+
       return +sumpenalty
     } catch (error) {
+      console.log("fineData error");
+      console.log({decreeSeries,
+        decreeNumber,
+        carsNumber});
+      console.log(error);
+      
       throw new HttpError(HttpError.FINE_SUM_ERROR, 400)
     }
   }

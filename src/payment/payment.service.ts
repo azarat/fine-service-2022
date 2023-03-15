@@ -77,11 +77,27 @@ class PaymentService {
       config.siteId,
     )
 
+    console.log("testme 1");
+    
+
+    const res = await PaymentSdk.createPayment()
+
+    console.log(res, "createPayment");
+    
+
     const {
       data: { oper_id: operId, url },
       error,
-    } = await PaymentSdk.createPayment()
-    if (error) await this.handleGercError({ operId }, error)
+    } = res
+
+    // const {
+    //   data: { oper_id: operId, url },
+    //   error,
+    // } = await PaymentSdk.createPayment()
+
+    console.log("testme 2");
+
+    // if (error) await this.handleGercError({ operId }, error)
 
     await paymentRepository.updatePayment(_id, operId, url)
     return {
@@ -307,21 +323,10 @@ class PaymentService {
         carsNumber,
       )
 
-      console.log("fineData");
-      console.log(fineData);
-      console.log("fineData");
-      
-
       const { sumpenalty } = fineData
 
       return +sumpenalty
     } catch (error) {
-      console.log("fineData error");
-      console.log({decreeSeries,
-        decreeNumber,
-        carsNumber});
-      console.log(error);
-      
       throw new HttpError(HttpError.FINE_SUM_ERROR, 400)
     }
   }

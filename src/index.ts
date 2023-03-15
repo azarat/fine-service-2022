@@ -49,7 +49,7 @@ const start = async (): Promise<void> => {
     if (config.apiHost == "http://172.20.10.2") {
       await app.listen(config.port, '172.20.10.2')
     } else {
-      await app.listen(config.port)
+      await app.listen(config.port, '10.0.5.233')
     }
   } catch (err) {
     app.log.error(err)

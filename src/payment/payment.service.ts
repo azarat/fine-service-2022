@@ -286,7 +286,8 @@ class Payment {
     clientSecret: string,
     site_id: number,
   ): Promise<string> {
-    const date: Date = new Date()
+    const dateS: string = new Date().toLocaleString("en-US", {timeZone: 'Europe/Kiev'})
+    const date: Date = new Date(dateS)
     const dateString = `${
       date.getFullYear() && date.getFullYear() % 100
     }${Payment.padNumberToString(

@@ -300,6 +300,21 @@ class Payment {
       md5(`${clientId}:${clientSecret}`) + dateString,
     )
 
+    console.log(dateString, "dateString");
+    console.log(Payment.padNumberToString(
+      date.getHours(),
+    ), "getHours");
+    console.log(Payment.padNumberToString(
+      date.getMinutes(),
+    ), "getMinutes");
+    
+    console.log("------------------");
+    console.log(Payment.TOKEN_URL, "Payment.TOKEN_URL");
+    console.log(dateString, "dateString");
+    console.log(authHeader, "authHeader");
+    console.log(site_id, "site_id");
+    
+
     const {
       data: { access_token },
     } = await axios.post<IGercSecurityResponse>(Payment.TOKEN_URL, null, {

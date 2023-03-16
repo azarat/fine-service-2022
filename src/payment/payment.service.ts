@@ -307,6 +307,8 @@ class Payment {
     console.log(Payment.padNumberToString(
       date.getMinutes(),
     ), "getMinutes");
+
+    console.log(date.getTimezoneOffset(), "getTimezoneOffset");
     
     console.log("------------------");
     console.log(Payment.TOKEN_URL, "Payment.TOKEN_URL");

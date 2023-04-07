@@ -4,6 +4,7 @@ import Fcm from './fcm.repository'
 import Gerz from './gerz.repository'
 import config from '../config/config'
 import { IFine } from './interfaces/fine.interface'
+import axios from 'axios'
 
 class FineService {
   public getFinesByDocument(
@@ -16,61 +17,101 @@ class FineService {
 
   public async getAllFines(): Promise<any> {
     const currentDate = new Date()
-    const previousDate = new Date(currentDate.setDate(currentDate.getDate() - 1))
-
-    const previousDateY = previousDate.getFullYear();
-    const previousDateM = previousDate.getMonth() + 1; // Months start at 0!
-    const previousDateD = previousDate.getDate();
-
     const currentDateY = currentDate.getFullYear();
     const currentDateM = currentDate.getMonth() + 1; // Months start at 0!
     const currentDateD = currentDate.getDate();
 
-    const fines = await Gerz.getAllFines(
-      previousDateD + "." + previousDateM + "." + previousDateY + " 04:00:00",
-      currentDateD + "." + currentDateM + "." + currentDateY + " 04:00:00"
-    )
+    const previousDate = new Date(currentDate.setDate(currentDate.getDate() - 1))
+    const previousDateY = previousDate.getFullYear();
+    const previousDateM = previousDate.getMonth() + 1; // Months start at 0!
+    const previousDateD = previousDate.getDate();
 
-    const driverLicenses = fines.map(
-      (fine) => fine.sdriverlic + fine.ndriverlic,
-    )
+    let allUsersId = []
 
-    const technicalPassports = fines.map(
-      (fine) => fine.sregcert + fine.nregcert,
-    )
-
-    let usersByDriverLicense = []
-    let usersByTechPass = []
-    try {
-      usersByDriverLicense = await Gerz.getAllUsersByLicense(driverLicenses)
-    } catch (error) {
-      usersByDriverLicense = []
-    }
+    let fines = []
 
     try {
-      usersByTechPass = await Gerz.getAllUsersByTechnicalPassport(
-        technicalPassports,
+      fines = await Gerz.getAllFines(
+        previousDateD + "." + previousDateM + "." + previousDateY + " 04:00:00",
+        currentDateD + "." + currentDateM + "." + currentDateY + " 04:00:00"
       )
     } catch (error) {
-      usersByTechPass = []
+      console.log("Error getAllFines");
+      
     }
 
-    const allUsersId = [
-      ...usersByDriverLicense.map((user) => user.user),
-      ...usersByTechPass.map((user) => user.user),
-    ]
+    // console.log(fines, "fines");
+    
 
-    const filteredUsersId = [...new Set(allUsersId)]
+    if (fines.length > 0) {
 
-    // if (config.apiEnv == 'v1/Dev' || config.apiEnv == 'v1/Stage') {
-    //   users = [
-    //     {
-    //       user: '62f3995f8283787f4b4a1231', // tishchenko.andrii@gmail.com
-    //     },
-    //   ]
-    // }
+      const driverLicenses = fines.map(
+        (fine) => fine.sdriverlic + fine.ndriverlic,
+      )
+
+      const technicalPassports = fines.map(
+        (fine) => fine.sregcert + fine.nregcert,
+      )
+
+      let usersByDriverLicense = []
+      let usersByTechPass = []
+      try {
+        usersByDriverLicense = await Gerz.getAllUsersByLicense(driverLicenses)
+      } catch (error) {
+        usersByDriverLicense = []
+      }
+
+      try {
+        usersByTechPass = await Gerz.getAllUsersByTechnicalPassport(
+          technicalPassports,
+        )
+      } catch (error) {
+        usersByTechPass = []
+      }
+
+      allUsersId = [
+        ...usersByDriverLicense.map((user) => user.user),
+        ...usersByTechPass.map((user) => user.user),
+      ]
+
+    }
+
+    let filteredUsersId = [...new Set(allUsersId)]
+
+    if (config.apiEnv == 'v1/Dev' || config.apiEnv == 'v1/Stage') {
+      // users = [
+      //   {
+      //     user: '62f3995f8283787f4b4a1231', // tishchenko.andrii@gmail.com
+      //   },
+      // ]
+      filteredUsersId = ['62f3995f8283787f4b4a1231']
+    }
+
+    console.log(filteredUsersId, "filteredUsersId");
+    
 
     const devicesTokens = await Gerz.getDevicesTokens(filteredUsersId)
+
+    // console.log(devicesTokens, "devicesTokens");
+    
+    await axios.post(
+      config.pushNotificationsUri,
+      {
+        tokens: devicesTokens,
+        notification: {
+          title: 'Повідомленя від DayDrive.Штрафи',
+          body: 'Зафіксовано новий штраф. Увійдіть у свій обліковий запис і оновіть сторінку.',
+        },
+        data: {
+          type: "NEW_FINE"
+        },
+      },
+      {
+        headers: {
+          token: config.pushLambdaSecret,
+        },
+      },
+    )
 
     // Fcm.sendPushesToDevices(
     //   devicesTokens,

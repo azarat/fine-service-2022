@@ -52,6 +52,9 @@ class Gerz {
     )
 
     if (!data_result.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+
+    console.log(data_result[0], "data_result[0]");
+    
     return data_result[0]
   }
 
@@ -77,7 +80,7 @@ class Gerz {
       },
     )
 
-    if (!data_result.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
+    // if (!data_result.length) throw new HttpError(HttpError.FINE_NOT_FOUND, 404)
     return data_result
   }
 
@@ -219,7 +222,7 @@ class Gerz {
         try {
           const response = await axios.get<IUserResponseData>(
             `${config.apiHost}${
-              config.apiHost == 'http://localhost' ? ':8080' : ''
+              config.apiHost == 'http://172.20.10.2' ? ':9080' : ''
             }/${config.apiEnv}/ProfileService/user/${user}`,
             {
               headers: {

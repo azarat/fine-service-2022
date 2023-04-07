@@ -19,10 +19,27 @@ class Fcm {
           'https://fcm.googleapis.com/fcm/send',
           {
             "registration_ids": devicesTokens,
-            "data": {
+            "notification": {
                 "title": title,
                 "body": msg
-            }
+            },
+            "data": {
+              "type": "NEW_FINE"
+            },
+            "apns": {
+              "headers": {
+                "apns-priority": "10"
+              },
+              "payload": {
+                "aps": {
+                  "alert": {
+                    "title": "my title",
+                    "body": "my body"
+                  }
+                }
+              }
+            },
+            "priority": "high",
           },
           {
             headers: {
@@ -32,7 +49,7 @@ class Fcm {
           },
         )
 
-        // console.log(response.data);
+        console.log(response.data);
     
         return true
     }

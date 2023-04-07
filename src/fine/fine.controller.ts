@@ -19,6 +19,7 @@ const fineController = (server: FastifyInstance, _, done): void => {
     },
     async (req) => {
       const { decreeSeries, decreeNumber, carsNumber } = req.query
+
       return fineService.getFinesByDocument(
         decreeSeries,
         decreeNumber,

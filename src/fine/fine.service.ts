@@ -78,13 +78,21 @@ class FineService {
 
     let filteredUsersId = [...new Set(allUsersId)]
 
-    if (config.apiEnv == 'v1/Dev' || config.apiEnv == 'v1/Stage') {
-      // users = [
-      //   {
-      //     user: '62f3995f8283787f4b4a1231', // tishchenko.andrii@gmail.com
-      //   },
-      // ]
-      filteredUsersId = ['62f3995f8283787f4b4a1231']
+    if (config.apiEnv == 'v1/Dev') {
+      filteredUsersId = [
+        '62f3995f8283787f4b4a1231', // tishchenko.andrii@gmail.com
+        '62a712ac7bb9ed89307b0e17', // mazur.karyna@gmail.com
+      ]
+    }
+
+    if (config.apiEnv == 'v1/Stage') {
+      const filteredUsersIdEnabled = [
+        '62f3995f8283787f4b4a1231', // tishchenko.andrii@gmail.com
+        '62a712ac7bb9ed89307b0e17', // mazur.karyna@gmail.com
+        '61b3c7e1cf6be8298224a0ac', // lorensovi4@gmail.com
+      ]
+
+      filteredUsersId = filteredUsersId.filter(uid => filteredUsersIdEnabled.includes(uid))
     }
 
     console.log(filteredUsersId, "filteredUsersId");

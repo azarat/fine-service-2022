@@ -24,7 +24,9 @@ class Config {
   readonly port: string | number
   readonly notify: string
   readonly backref: string
+  apiEnv: string
   apiHost: string
+  fcmToken: string
   clientId: string
   clientSecret: string
   gercUrl: string
@@ -44,9 +46,11 @@ class Config {
 
   constructor() {
     this.port = process.env.PORT || 8000
+    this.apiEnv = process.env.API_ENV || 'v1'
     this.apiHost = process.env.API_HOST
-    this.notify = `${this.apiHost}/payment/notify`
-    this.backref = `${this.apiHost}/payment/thanks`
+    this.fcmToken = process.env.FCM_TOKEN
+    this.notify = `${this.apiHost}${this.apiHost == "http://172.20.10.2" ? (":" + this.port) : ""}/${this.apiEnv}/FineService/payment/notify`
+    this.backref = `${this.apiHost}${this.apiHost == "http://172.20.10.2" ? (":" + this.port) : ""}/${this.apiEnv}/FineService/payment/thanks`
   }
 
   async init(): Promise<void> {

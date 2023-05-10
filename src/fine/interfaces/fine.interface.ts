@@ -28,6 +28,10 @@ export interface IFine {
   dcanceled: string | null
   nprotocol: string | null
   sprotocol: string | null
+  sdriverlic: string | null
+  ndriverlic: string | null
+  nregcert: string | null
+  sregcert: string | null
   paidinfo: string | null
   typefine: string | null
   datedelivery: string | null

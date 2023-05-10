@@ -29,6 +29,33 @@ export const ByDocumentSchema = {
   },
 }
 
+export const ScanSchema = {
+  tags: ['Fine'],
+  querystring: {
+    type: 'object',
+    required: [],
+    properties: {
+      // decreeSeries: { type: 'string' },
+    },
+  },
+  headers: {
+    token: {
+      type: 'string',
+    },
+    'accept-language': { type: 'string' },
+  },
+  response: {
+    401: {
+      description: 'Invalid token',
+      type: 'null',
+    },
+    403: {
+      description: 'Provide token',
+      type: 'null',
+    },
+  },
+}
+
 export const ByTokenSchema = {
   tags: ['Fine'],
   headers: {

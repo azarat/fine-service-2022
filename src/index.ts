@@ -10,7 +10,7 @@ import { LanguagesEnum } from './errors/languages.enum'
 
 const app = fastify({ logger: true })
 
-app.get('/health', async () => 'Hello World')
+app.get(`/${config.apiEnv}/FineService/health`, async () => 'Hello World')
 app.register(swagger, {
   exposeRoute: true,
   routePrefix: '/docs',
@@ -22,8 +22,10 @@ app.register(swagger, {
     },
   },
 })
-app.register(fineController, { prefix: '/fines' })
-app.register(paymentController, { prefix: '/payment' })
+app.register(fineController, { prefix: `/${config.apiEnv}/FineService/fines` })
+app.register(paymentController, {
+  prefix: `/${config.apiEnv}/FineService/payment`,
+})
 app.setErrorHandler((err, req, res) => {
   app.log.error(err)
   const message = err.message
@@ -44,6 +46,10 @@ const start = async (): Promise<void> => {
   try {
     await config.init()
     await mongoose.connect(config.mongoUri)
+    // if (config.apiHost == "http://172.20.10.2") {
+    //   await app.listen(config.port, '172.20.10.2')
+    // } else {
+    // }
     await app.listen(config.port, '0.0.0.0')
   } catch (err) {
     app.log.error(err)

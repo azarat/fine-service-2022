@@ -12,6 +12,12 @@ class HttpError {
     uk: 'Штраф не знайдено',
   }
 
+  static USERS_NOT_FOUND = {
+    en: 'Users was not found',
+    ru: 'Пользователей не найдено',
+    uk: 'Користувачів не знайдено',
+  }
+
   constructor(
     public message: ILocalizatedError | string,
     public code: number,

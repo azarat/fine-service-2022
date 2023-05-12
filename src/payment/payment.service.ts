@@ -727,25 +727,29 @@ class PaymentService {
       success: PaymentService.FINE_PAYED_SUCCEEDED,
       error: PaymentService.FINE_PAYED_ERROR,
     }
-    await axios.post(
-      config.pushNotificationsUri,
-      {
-        tokens: deviceToken,
-        notification: {
-          title: 'Статус штрафа изменен',
-          body: notificationData[status.toLowerCase()],
-        },
-        data: {
-          id: _id,
-          type: notificationType[status.toLowerCase()],
-        },
-      },
-      {
-        headers: {
-          token: config.pushLambdaSecret,
-        },
-      },
-    )
+    
+    console.log("title: 'Статус штрафа изменен'");
+    console.log("body: " + notificationData[status.toLowerCase()] + " . " + status.toLowerCase());
+    
+    // await axios.post(
+    //   config.pushNotificationsUri,
+    //   {
+    //     tokens: deviceToken,
+    //     notification: {
+    //       title: 'Статус штрафа изменен',
+    //       body: notificationData[status.toLowerCase()],
+    //     },
+    //     data: {
+    //       id: _id,
+    //       type: notificationType[status.toLowerCase()],
+    //     },
+    //   },
+    //   {
+    //     headers: {
+    //       token: config.pushLambdaSecret,
+    //     },
+    //   },
+    // )
   }
 
   public async gercRedirect(orderId: string): Promise<void> {

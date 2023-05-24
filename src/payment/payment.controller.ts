@@ -87,7 +87,20 @@ const paymentController = (server: FastifyInstance, _, done): void => {
     '/notify',
     { schema: { hide: true } },
     async (req) => {
-      return PaymentService.gercNotify(req.body)
+      // console.log("-----------------------------------------------------------------");
+      // console.log("-----------------------------------------------------------------");
+      // console.log("-----------------------------------------------------------------");
+      // console.log("-----------------------------------------------------------------");
+      // console.log(req.headers);
+      // console.log("-----------------------------------------------------------------");
+      // console.log("-----------------------------------------------------------------");
+      // console.log("-----------------------------------------------------------------");
+      // console.log("-----------------------------------------------------------------");
+      
+      PaymentService.gercNotify(req.body)
+      return {
+        success: true
+      }
     },
   )
 
@@ -95,7 +108,11 @@ const paymentController = (server: FastifyInstance, _, done): void => {
     '/thanks',
     { schema: { hide: true } },
     async (req) => {
-      return PaymentService.gercRedirect(req.query.orderId)
+      PaymentService.gercRedirect(req.query.orderId)
+      
+      return {
+        success: true
+      }
     },
   )
 

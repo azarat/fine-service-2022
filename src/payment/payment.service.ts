@@ -728,8 +728,8 @@ class PaymentService {
       error: PaymentService.FINE_PAYED_ERROR,
     }
     
-    console.log("title: 'Статус штрафа изменен'");
-    console.log("body: " + notificationData[status.toLowerCase()] + " . " + status.toLowerCase());
+    // console.log("title: 'Статус штрафа изменен'");
+    // console.log("body: " + notificationData[status.toLowerCase()] + " . " + status.toLowerCase());
     
     // await axios.post(
     //   config.pushNotificationsUri,

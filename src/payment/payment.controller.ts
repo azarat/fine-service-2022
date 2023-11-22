@@ -107,12 +107,15 @@ const paymentController = (server: FastifyInstance, _, done): void => {
   server.get<Query<GercThanksDTO>>(
     '/thanks',
     { schema: { hide: true } },
-    async (req) => {
+    async (req, response) => {
       PaymentService.gercRedirect(req.query.orderId)
       
-      return {
-        success: true
-      }
+      response.redirect('app://daydrive.com.ua/home/fines')
+      // response.redirect('https://daydrive.com.ua')
+
+      // return {
+      //   success: true
+      // }
     },
   )
 

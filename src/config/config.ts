@@ -36,7 +36,7 @@ class Config {
   mongoUri: string
   paymentClientId: string
   paymentClientSecret: string
-  siteId: string
+  siteId: number
   privateKey: string
   publicKey: string
   applepayMerchant: string
@@ -61,7 +61,7 @@ class Config {
     this.mongoUri = process.env.MONGO_URI
     this.paymentClientId = process.env.PAYMENT_CLIENT_ID
     this.paymentClientSecret = process.env.PAYMENT_CLIENT_SECRET
-    this.siteId = process.env.SITE_ID
+    this.siteId = parseInt(process.env.SITE_ID)
     this.privateKey = process.env.PRIVATE_KEY
     this.publicKey = process.env.PUBLIC_KEY
     this.applepayMerchant = process.env.APPLEPAY_MERCHANT

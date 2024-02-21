@@ -1,25 +1,25 @@
-import { SecretsManager } from 'aws-sdk'
+// import { SecretsManager } from 'aws-sdk'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
 
 class Config {
-  private static readonly secrets = new SecretsManager({
-    region: process.env.AWS_REGION,
-  })
+  // private static readonly secrets = new SecretsManager({
+  //   region: process.env.AWS_REGION,
+  // })
 
-  private static readonly getSecret = async (
-    secretName: string,
-  ): Promise<string> => {
-    const { SecretString } = await Config.secrets
-      .getSecretValue({
-        SecretId: process.env.SECRET_ID,
-      })
-      .promise()
+  // private static readonly getSecret = async (
+  //   secretName: string,
+  // ): Promise<string> => {
+  //   const { SecretString } = await Config.secrets
+  //     .getSecretValue({
+  //       SecretId: process.env.SECRET_ID,
+  //     })
+  //     .promise()
 
-    const secrets = JSON.parse(SecretString)
-    return secrets[secretName]
-  }
+  //   const secrets = JSON.parse(SecretString)
+  //   return secrets[secretName]
+  // }
 
   readonly port: string | number
   readonly notify: string
@@ -36,7 +36,7 @@ class Config {
   mongoUri: string
   paymentClientId: string
   paymentClientSecret: string
-  siteId: number
+  siteId: string
   privateKey: string
   publicKey: string
   applepayMerchant: string
@@ -51,25 +51,42 @@ class Config {
     this.fcmToken = process.env.FCM_TOKEN
     this.notify = `${this.apiHost}${this.apiHost == "http://172.20.10.2" ? (":" + this.port) : ""}/${this.apiEnv}/FineService/payment/notify`
     this.backref = `${this.apiHost}${this.apiHost == "http://172.20.10.2" ? (":" + this.port) : ""}/${this.apiEnv}/FineService/payment/thanks`
+
+    this.clientId = process.env.CLIENT_ID
+    this.clientSecret = process.env.CLIENT_SECRET
+    this.gercUrl = process.env.GERC_FINES_URL
+    this.gercAuthUrl = process.env.GERC_AUTH_URL
+    this.userSdkUrl = process.env.USER_SDK_URL
+    this.userSdkSecret = process.env.USER_SDK_SECRET
+    this.mongoUri = process.env.MONGO_URI
+    this.paymentClientId = process.env.PAYMENT_CLIENT_ID
+    this.paymentClientSecret = process.env.PAYMENT_CLIENT_SECRET
+    this.siteId = process.env.SITE_ID
+    this.privateKey = process.env.PRIVATE_KEY
+    this.publicKey = process.env.PUBLIC_KEY
+    this.applepayMerchant = process.env.APPLEPAY_MERCHANT
+    this.applepayPrivate = process.env.APPLEPAY_PRIVATE
+    this.pushNotificationsUri = process.env.PUSH_NOTIFICATIONS_URI
+    this.pushLambdaSecret = process.env.PUSH_LAMBDA_SECRET
   }
 
   async init(): Promise<void> {
-    this.clientId = await Config.getSecret('CLIENT_ID')
-    this.clientSecret = await Config.getSecret('CLIENT_SECRET')
-    this.gercUrl = await Config.getSecret('GERC_FINES_URL')
-    this.gercAuthUrl = await Config.getSecret('GERC_AUTH_URL')
-    this.userSdkUrl = await Config.getSecret('USER_SDK_URL')
-    this.userSdkSecret = await Config.getSecret('USER_SDK_SECRET')
-    this.mongoUri = await Config.getSecret('MONGO_URI')
-    this.paymentClientId = await Config.getSecret('PAYMENT_CLIENT_ID')
-    this.paymentClientSecret = await Config.getSecret('PAYMENT_CLIENT_SECRET')
-    this.siteId = +(await Config.getSecret('SITE_ID'))
-    this.privateKey = await Config.getSecret('PRIVATE_KEY')
-    this.publicKey = await Config.getSecret('PUBLIC_KEY')
-    this.applepayMerchant = await Config.getSecret('APPLEPAY_MERCHANT')
-    this.applepayPrivate = await Config.getSecret('APPLEPAY_PRIVATE')
-    this.pushNotificationsUri = await Config.getSecret('PUSH_NOTIFICATIONS_URI')
-    this.pushLambdaSecret = await Config.getSecret('PUSH_LAMBDA_SECRET')
+    // this.clientId = await Config.getSecret('CLIENT_ID')
+    // this.clientSecret = await Config.getSecret('CLIENT_SECRET')
+    // this.gercUrl = await Config.getSecret('GERC_FINES_URL')
+    // this.gercAuthUrl = await Config.getSecret('GERC_AUTH_URL')
+    // this.userSdkUrl = await Config.getSecret('USER_SDK_URL')
+    // this.userSdkSecret = await Config.getSecret('USER_SDK_SECRET')
+    // this.mongoUri = await Config.getSecret('MONGO_URI')
+    // this.paymentClientId = await Config.getSecret('PAYMENT_CLIENT_ID')
+    // this.paymentClientSecret = await Config.getSecret('PAYMENT_CLIENT_SECRET')
+    // this.siteId = +(await Config.getSecret('SITE_ID'))
+    // this.privateKey = await Config.getSecret('PRIVATE_KEY')
+    // this.publicKey = await Config.getSecret('PUBLIC_KEY')
+    // this.applepayMerchant = await Config.getSecret('APPLEPAY_MERCHANT')
+    // this.applepayPrivate = await Config.getSecret('APPLEPAY_PRIVATE')
+    // this.pushNotificationsUri = await Config.getSecret('PUSH_NOTIFICATIONS_URI')
+    // this.pushLambdaSecret = await Config.getSecret('PUSH_LAMBDA_SECRET')
   }
 }
 
